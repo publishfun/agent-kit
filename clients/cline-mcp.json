@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "publish-fun": {
+      "type": "streamableHttp",
+      "url": "https://publish.fun/api/mcp",
+      "headers": { "Authorization": "Bearer YOUR_API_KEY" }
+    }
+  }
+}

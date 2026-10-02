@@ -1,4 +1,4 @@
-"""Checks on the kit's own files: the one-click install links in README.md and the plugin's directory listing."""
+"""Checks on the kit's own files: the one-click install links in README.md, the client configs and the plugin's directory listing."""
 import base64, json, pathlib, re, struct, unittest, urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -39,6 +39,23 @@ class InstallLinksTest(unittest.TestCase):
         server = json.loads(base64.b64decode(params["config"], validate=True))
         config = json.loads((ROOT / "clients" / "cursor-mcp.json").read_text(encoding="utf-8"))
         self.assertEqual({"mcpServers": {params["name"]: server}}, config)
+
+
+class ClientConfigsTest(unittest.TestCase):
+    """The setup files in clients/."""
+
+    def test_each_is_linked_from_the_readme_and_names_the_plugins_server(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        url = json.loads((PLUGIN / ".mcp.json").read_text(encoding="utf-8"))["mcpServers"]["publish-fun"]["url"]
+        for f in sorted(p for p in (ROOT / "clients").iterdir() if not p.name.startswith(".")):
+            with self.subTest(f.name):
+                self.assertIn(f"](clients/{f.name})", readme)
+                self.assertIn(url, f.read_text(encoding="utf-8"))
+
+    def test_cline_uses_streamable_http(self):
+        # Without a type, Cline connects with the legacy SSE transport, whose GET publish.fun answers with 405.
+        server = json.loads((ROOT / "clients" / "cline-mcp.json").read_text(encoding="utf-8"))["mcpServers"]["publish-fun"]
+        self.assertEqual(server["type"], "streamableHttp")
 
 
 class PluginListingTest(unittest.TestCase):

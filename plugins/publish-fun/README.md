@@ -22,6 +22,8 @@ In Claude Code:
 
 Claude Code then asks for your Publish.fun API key. You can leave it empty and add it later with `/plugin configure publish-fun@publishfun`.
 
+In Cowork and claude.ai chat, installing the plugin doesn't connect its server: open the plugin's **Connectors** tab and add or connect the Publish.fun server there. These apps don't ask for plugin settings, so the server runs without a key: `get_submission_guidelines` and `cite_paper` work, and the tools that need a key return an error. To submit, revise or track papers, use the plugin in Claude Code.
+
 ## API key (optional)
 
 You don't need a key to read published papers or get citations. To submit, revise or track your papers, or to upload figures:
@@ -31,8 +33,6 @@ You don't need a key to read published papers or get citations. To submit, revis
 3. Link a verified ORCID iD once at https://publish.fun/auth/orcid. You need one to submit a paper or upload figures.
 
 Each account may submit 2 papers per hour and 3 per day.
-
-Apps that don't ask for plugin settings, such as Cowork, use the server without a key, so only reading and citing work there.
 
 ## Tools
 
@@ -45,7 +45,7 @@ Apps that don't ask for plugin settings, such as Cowork, use the server without 
 | `submit_revision` | Sends a revised manuscript and a response letter when the editor asks for a revision | Yes |
 | `upload_image` | Uploads a figure (PNG, JPEG, GIF or WebP) and returns its public URL | Yes, and a verified ORCID iD |
 
-The skill also uses publish.fun's REST API at https://publish.fun/api, for example to search published papers or to upload a figure larger than about 3 MB.
+The skill also uses publish.fun's REST API at https://publish.fun/api, for example to search published papers or to upload a figure larger than about 3 MB. The plugin gives your key only to the MCP server, in its Authorization header; Claude itself never sees it. So a REST call that needs the key, such as that upload, means giving Claude your key in the conversation, where it stays in the transcript. To avoid that, shrink a figure below about 3 MB so that it goes through `upload_image`.
 
 ## Example prompts
 
@@ -58,7 +58,7 @@ The skill also uses publish.fun's REST API at https://publish.fun/api, for examp
 ## What this plugin sends where
 
 - **Everything the plugin sends goes to publish.fun.** The plugin connects only to publish.fun: its MCP server and, through the skill, its REST API. This includes your API key (in the Authorization header), your manuscripts, revisions and response letters, their metadata (title, abstract, keywords, license, and each author's name, affiliation and ORCID iD), the figures you upload, and the paper ids and search terms you look up.
-- **Manuscripts go on to third-party AI and search providers.** To review a submission or a revision, publish.fun sends its content and metadata through OpenRouter to third-party AI model providers, and sends search queries derived from it to web-search providers. Its title is also looked up in the Crossref, OpenAlex and arXiv registries. These providers process your content under their own terms and may retain it, and this can't be undone. Don't submit anything you aren't authorized to disclose.
+- **Manuscripts go on to third-party AI and search providers.** To review a submission or a revision, publish.fun sends its content and metadata through OpenRouter to third-party AI model providers, and sends search queries derived from it to web-search providers. Its title is also looked up in the Crossref, OpenAlex and arXiv registries, and the DOIs and arXiv ids it cites are checked at Crossref and arXiv. These providers process your content under their own terms and may retain it, and this can't be undone. Don't submit anything you aren't authorized to disclose.
 - **Uploaded figures are public from the moment you upload them.** Anyone with the URL that an upload returns can open the figure, whether or not the paper is ever accepted. Images that a manuscript links to on other sites are copied in the same way when its review starts. Uploads that no submitted manuscript references are deleted after 7 days.
 - **Accepted papers are published permanently.** When a paper is accepted, anyone can read its title, authors (with their affiliations and ORCID iDs), abstract, keywords, full text and figures. Its complete review and decision history is published too, including each revised version and response letter. Papers are published under CC BY 4.0 by default, or CC0 if you choose. A published paper stays public: a retraction marks it but doesn't erase it.
 - publish.fun also keeps standard server logs, such as your IP address, request times and user agent.

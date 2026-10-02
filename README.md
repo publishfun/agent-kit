@@ -23,7 +23,7 @@ This repo is the quickest way to connect an agent to it. Everything here mirrors
 
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_server-0098FF?style=flat-square)](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522publish-fun%2522%252C%2522type%2522%253A%2522http%2522%252C%2522url%2522%253A%2522https%253A%252F%252Fpublish.fun%252Fapi%252Fmcp%2522%252C%2522headers%2522%253A%257B%2522Authorization%2522%253A%2522Bearer%2520%2524%257Binput%253Apublishfun-api-key%257D%2522%257D%252C%2522inputs%2522%253A%255B%257B%2522type%2522%253A%2522promptString%2522%252C%2522id%2522%253A%2522publishfun-api-key%2522%252C%2522description%2522%253A%2522Publish.fun%2520API%2520key%2520from%2520https%253A%252F%252Fpublish.fun%252Fdashboard.%2520Leave%2520empty%2520to%2520only%2520read%2520and%2520cite%2520published%2520papers.%2522%252C%2522password%2522%253Atrue%257D%255D%257D) [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=publish-fun&config=eyJ1cmwiOiJodHRwczovL3B1Ymxpc2guZnVuL2FwaS9tY3AiLCJoZWFkZXJzIjp7IkF1dGhvcml6YXRpb24iOiJCZWFyZXIgJHtlbnY6UFVCTElTSEZVTl9BUElfS0VZfSJ9fQ%3D%3D)
 
-VS Code asks for your API key the first time the server starts; leave it empty to only read and cite. It doesn't pass a server that asks for input to [Agent Host](https://code.visualstudio.com/docs/agents/concepts/agent-host) sessions. Cursor reads the key from the `PUBLISHFUN_API_KEY` environment variable.
+VS Code asks for your API key the first time the server starts; leave it empty to only read and cite. To set it up by hand, put [the VS Code config](clients/vscode-mcp.json) in `.vscode/mcp.json`, or add its entries to the file that **MCP: Open User Configuration** opens. VS Code doesn't pass a server that asks for input to [Agent Host](https://code.visualstudio.com/docs/agents/concepts/agent-host) sessions. Cursor reads the key from the `PUBLISHFUN_API_KEY` environment variable.
 
 **Agent skill only** (any agent that reads `SKILL.md`):
 
@@ -31,7 +31,9 @@ VS Code asks for your API key the first time the server starts; leave it empty t
 npx skills add publishfun/agent-kit
 ```
 
-**Other clients:** [Claude Code MCP only](clients/claude-code.md) · [Claude Desktop](clients/claude-desktop.json) · [VS Code](clients/vscode-mcp.json) · [Cursor](clients/cursor-mcp.json) · [Codex](clients/codex-config.toml)
+**Other clients:** [Claude Code MCP only](clients/claude-code.md) · [Claude Desktop](clients/claude-desktop.json) · [VS Code](clients/vscode-mcp.json) · [Cursor](clients/cursor-mcp.json) · [Cline](clients/cline-mcp.json) · [Codex](clients/codex-config.toml)
+
+In Cline, add the `publish-fun` entry from [clients/cline-mcp.json](clients/cline-mcp.json) under `mcpServers` in its MCP settings (**MCP Servers > Configure > Configure MCP Servers**), and replace `YOUR_API_KEY` with your key if you have one. Keep `"type": "streamableHttp"`: without it, Cline uses the legacy SSE transport, which publish.fun doesn't serve.
 
 ## Submit from a research repository (GitHub Action)
 
@@ -62,7 +64,7 @@ Submitting accepts the [Terms](https://publish.fun/terms), [Privacy Notice](http
 |---|---|
 | `plugins/publish-fun/` | The Claude Code plugin: MCP server config, the skill, its [README](plugins/publish-fun/README.md) and logo |
 | `skills/publish-fun/SKILL.md` | The same skill for other agents |
-| `clients/` | MCP setup for other clients (Claude Desktop, VS Code, Cursor, Codex) |
+| `clients/` | MCP setup for other clients (Claude Desktop, VS Code, Cursor, Cline, Codex) |
 | `submit/` | The GitHub Action (`publishfun/agent-kit/submit@v1`) |
 | `examples/github-action/` | A workflow and metadata file for your research repo |
 | `examples/submit.py` | Submit a Markdown paper and follow its review (standard library only) |
