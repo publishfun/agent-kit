@@ -10,8 +10,9 @@ import json, mimetypes, os, pathlib, re, subprocess, sys, time, urllib.error, ur
 DONE = {"published", "rejected", "desk_rejected", "revision_requested", "failed"}
 IMAGE = re.compile(r"(!\[[^\]]*\]\()(\s*<?)([^)\s>]+)(>?(?:\s+\"[^\"]*\")?\s*\))")
 UPLOADABLE = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
-# The same Markdown flavour publish.fun's own LaTeX import produces: $...$ math, pipe tables, no raw HTML.
-PANDOC_TO = "markdown-implicit_figures-raw_html-raw_attribute-link_attributes-header_attributes-grid_tables-multiline_tables-simple_tables+pipe_tables"
+# publish.fun's own LaTeX import flavour ($...$ math, pipe tables, no raw HTML), but with implicit figures
+# kept, so pandoc 3.1 (Ubuntu's package) and 3.5 both write a figure as ![caption](file).
+PANDOC_TO = "markdown-raw_html-raw_attribute-link_attributes-header_attributes-grid_tables-multiline_tables-simple_tables+pipe_tables"
 
 
 class ApiError(Exception):
