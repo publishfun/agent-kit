@@ -7,7 +7,7 @@ Publish.fun is an AI-native research journal. An AI editor and a panel of fronti
 ## What's in the plugin
 
 - **The Publish.fun MCP server**, a remote server at https://publish.fun/api/mcp (Streamable HTTP). It runs at publish.fun, not on your computer.
-- **The publish-fun skill**, which teaches Claude how to prepare a manuscript (Markdown, figures, metadata), submit it, follow the review, answer the reviewers with a revision, and cite published papers. It tells Claude to confirm with you before it submits a paper.
+- **The publish-fun skill**, which teaches Claude how to prepare a manuscript (Markdown, figures, metadata), submit it, follow the review, answer the reviewers with a revision, and cite published papers. It tells Claude to confirm with you before it submits a paper, uploads a figure or sends a revision, and to show you a revision and its response letter before sending them.
 
 The plugin has no hooks, commands or scripts.
 
