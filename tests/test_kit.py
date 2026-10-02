@@ -1,4 +1,4 @@
-"""Checks on the kit's own files: the one-click install links in README.md, the client configs and the plugin's directory listing."""
+"""Checks on the kit's own files: the one-click install links in README.md, the client configs, the plugin's directory listing and the manifests for other agents."""
 import base64, json, pathlib, re, struct, unittest, urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -69,13 +69,17 @@ class PluginListingTest(unittest.TestCase):
         prose = re.sub(r"`[^`]*`", " ", prose)  # nor, to be safe, inline code
         self.assertGreaterEqual(len(re.findall(r"[A-Za-z][\w'.-]*", prose)), 40)
 
-    def test_icon_is_a_400px_png_inside_the_plugin(self):
+    def test_icon_is_a_square_png_inside_the_plugin(self):
         self.assertTrue(self.manifest["icon"].startswith("./"))
         icon = (PLUGIN / self.manifest["icon"]).resolve()
         self.assertTrue(icon.is_relative_to(PLUGIN.resolve()))
-        head = icon.read_bytes()[:24]
-        self.assertEqual(head[:8], b"\x89PNG\r\n\x1a\n")
-        self.assertEqual(struct.unpack(">II", head[16:24]), (400, 400))
+        self.assertFalse(icon.is_relative_to((PLUGIN / ".claude-plugin").resolve()))  # only plugin.json goes there
+        data = icon.read_bytes()
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        width, height = struct.unpack(">II", data[16:24])
+        self.assertEqual(width, height)
+        self.assertTrue(512 <= width <= 2048, width)  # what listings ask for; the README and Cline use the 400 px logo.png
+        self.assertLess(len(data), 2 * 1024 * 1024)
 
     def test_listing_urls_are_https(self):
         for key in ("documentationUrl", "supportUrl", "privacyPolicyUrl", "termsOfServiceUrl"):
@@ -86,6 +90,83 @@ class PluginListingTest(unittest.TestCase):
         self.assertIs(key["sensitive"], True)
         # Cowork skips an MCP server whose referenced option has no default; empty still reads and cites.
         self.assertEqual(key["default"], "")
+
+
+def load(path):
+    return json.loads((ROOT / path).read_text(encoding="utf-8"))
+
+
+class OtherAgentsTest(unittest.TestCase):
+    """The Agent Plugins manifest (VS Code, Copilot, Cursor), Cursor's marketplace and the Gemini CLI extension describe the same plugin."""
+
+    claude = json.loads((PLUGIN / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
+    url = json.loads((PLUGIN / ".mcp.json").read_text(encoding="utf-8"))["mcpServers"]["publish-fun"]["url"]
+
+    def test_agent_plugins_manifest_matches_the_claude_one(self):
+        agent = load("plugins/publish-fun/plugin.json")
+        self.assertEqual(agent["$schema"], "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json")
+        # The schema is closed: any other field makes the manifest invalid.
+        allowed = {"$schema", "name", "version", "description", "author", "homepage", "repository", "license", "keywords", "extensions"}
+        self.assertLessEqual(set(agent), allowed)
+        self.assertRegex(agent["name"], r"^(?!.*(?:--|\.\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
+        for key in ("name", "version", "description", "author", "homepage", "repository", "license", "keywords"):
+            self.assertEqual(agent[key], self.claude[key], key)
+
+    def test_agent_plugins_mcp_config_has_no_headers(self):
+        # Agent Plugins sends headers literally and forbids secrets in them, so the
+        # plugin connects without a key there: reading and citing work.
+        mcp = load("plugins/publish-fun/mcp.json")
+        self.assertEqual(mcp["$schema"], "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json")
+        self.assertEqual(mcp["mcpServers"], {"publish-fun": {"type": "streamable-http", "url": self.url}})
+
+    def test_cursor_marketplace_lists_the_plugin(self):
+        market = load(".cursor-plugin/marketplace.json")
+        self.assertLessEqual(set(market["owner"]), {"name", "email"})  # Cursor's schema allows no other owner field
+        claude_market = load(".claude-plugin/marketplace.json")
+        self.assertEqual(market["name"], claude_market["name"])
+        [entry] = market["plugins"]
+        self.assertEqual(entry["name"], self.claude["name"])
+        self.assertTrue((ROOT / entry["source"] / "plugin.json").is_file())
+
+    def test_gemini_extension_asks_for_the_key_and_sends_it(self):
+        ext = load("gemini-extension.json")
+        self.assertRegex(ext["name"], r"^[a-zA-Z0-9-]+$")
+        self.assertEqual(ext["name"], self.claude["name"])
+        [setting] = ext["settings"]
+        self.assertIs(setting["sensitive"], True)  # kept in the system keychain
+        server = ext["mcpServers"]["publish-fun"]
+        self.assertEqual(server["httpUrl"], self.url)  # httpUrl is streamable HTTP in every Gemini CLI version
+        # Unset, the variable becomes empty and publish.fun treats "Bearer" alone as no key.
+        self.assertEqual(server["headers"], {"Authorization": "Bearer ${%s}" % setting["envVar"]})
+
+    def test_every_manifest_has_the_same_version(self):
+        versions = {p: load(p)["version"] for p in ("plugins/publish-fun/.claude-plugin/plugin.json", "plugins/publish-fun/plugin.json", "gemini-extension.json")}
+        self.assertEqual(len(set(versions.values())), 1, versions)
+
+    def test_no_marketplace_file_that_copilot_reads_before_claudes(self):
+        # Copilot and VS Code read these before .claude-plugin/marketplace.json.
+        for p in ("marketplace.json", ".plugin/marketplace.json", ".github/plugin/marketplace.json", "plugin.json"):
+            self.assertFalse((ROOT / p).exists(), p)
+
+
+class SkillTest(unittest.TestCase):
+    """The skill as mirrored from publish.fun."""
+
+    def test_copies_are_identical(self):
+        a = (ROOT / "skills" / "publish-fun" / "SKILL.md").read_bytes()
+        self.assertEqual(a, (PLUGIN / "skills" / "publish-fun" / "SKILL.md").read_bytes())
+
+    def test_frontmatter_names_the_skill(self):
+        text = (ROOT / "skills" / "publish-fun" / "SKILL.md").read_text(encoding="utf-8")
+        front = text.split("---", 2)[1]
+        self.assertRegex(front, r"(?m)^name: publish-fun$")
+        self.assertRegex(front, r"(?m)^description: \S")
+
+    def test_no_text_that_gemini_would_substitute(self):
+        # Gemini CLI replaces $NAME and ${NAME} in skill text with the extension's
+        # settings or environment variables: the API key would reach the model.
+        text = (ROOT / "skills" / "publish-fun" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIsNone(re.search(r"\$\{?[A-Za-z_]", text))
 
 
 if __name__ == "__main__":

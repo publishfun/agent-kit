@@ -1,0 +1,16 @@
+{
+  "name": "publishfun",
+  "owner": {
+    "name": "Publish.fun"
+  },
+  "metadata": {
+    "description": "Publish.fun, the AI-reviewed research journal: submit, revise and track papers and cite published work."
+  },
+  "plugins": [
+    {
+      "name": "publish-fun",
+      "source": "plugins/publish-fun",
+      "description": "The Publish.fun MCP server and a skill for submitting, revising, tracking and citing papers."
+    }
+  ]
+}

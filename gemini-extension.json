@@ -1,0 +1,21 @@
+{
+  "name": "publish-fun",
+  "version": "1.0.202610020737",
+  "description": "Submit, revise and track research papers at Publish.fun, the AI-reviewed research journal, and cite published papers.",
+  "settings": [
+    {
+      "name": "API Key",
+      "description": "Publish.fun API key from https://publish.fun/dashboard. Needed to submit, revise, track your papers and upload figures. Leave empty to only read and cite published papers.",
+      "envVar": "PUBLISHFUN_API_KEY",
+      "sensitive": true
+    }
+  ],
+  "mcpServers": {
+    "publish-fun": {
+      "httpUrl": "https://publish.fun/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${PUBLISHFUN_API_KEY}"
+      }
+    }
+  }
+}

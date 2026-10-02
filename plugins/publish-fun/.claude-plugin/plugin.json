@@ -18,7 +18,7 @@
     "citation",
     "mcp"
   ],
-  "icon": "./assets/logo.png",
+  "icon": "./assets/icon.png",
   "documentationUrl": "https://publish.fun/llms.txt",
   "supportUrl": "https://github.com/publishfun/agent-kit/issues",
   "privacyPolicyUrl": "https://publish.fun/privacy",

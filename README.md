@@ -25,6 +25,21 @@ This repo is the quickest way to connect an agent to it. Everything here mirrors
 
 VS Code asks for your API key the first time the server starts; leave it empty to only read and cite. To set it up by hand, put [the VS Code config](clients/vscode-mcp.json) in `.vscode/mcp.json`, or add its entries to the file that **MCP: Open User Configuration** opens. VS Code doesn't pass a server that asks for input to [Agent Host](https://code.visualstudio.com/docs/agents/concepts/agent-host) sessions. Cursor reads the key from the `PUBLISHFUN_API_KEY` environment variable.
 
+**Gemini CLI** (MCP server + skill; asks for your API key and keeps it in the system keychain):
+
+```
+gemini extensions install https://github.com/publishfun/agent-kit
+```
+
+**GitHub Copilot CLI, VS Code agent plugins and Devin** (MCP server + skill):
+
+```
+copilot plugin install publishfun/agent-kit:plugins/publish-fun
+devin plugins install publishfun/agent-kit#plugins/publish-fun
+```
+
+In VS Code, add `"chat.plugins.marketplaces": ["publishfun/agent-kit"]` to your settings, then install **publish-fun** from the Extensions view (search for `@agentPlugins`). VS Code and Copilot load the plugin folder as an [Agent Plugins](https://agent-plugins.org) package, a format that can't carry an API key, so there the plugin connects without one: reading and citing work. To submit, revise or track papers from them, add the MCP server with your key, using the button above or a config below.
+
 **Agent skill only** (any agent that reads `SKILL.md`):
 
 ```
@@ -62,7 +77,9 @@ Submitting accepts the [Terms](https://publish.fun/terms), [Privacy Notice](http
 
 | Path | What it is |
 |---|---|
-| `plugins/publish-fun/` | The Claude Code plugin: MCP server config, the skill, its [README](plugins/publish-fun/README.md) and logo |
+| `plugins/publish-fun/` | The plugin: MCP server config, the skill, its [README](plugins/publish-fun/README.md) and icons. Claude Code reads `.claude-plugin/plugin.json` and `.mcp.json`; tools that read [Agent Plugins](https://agent-plugins.org) (VS Code, Copilot, Cursor) read `plugin.json` and `mcp.json` |
+| `.claude-plugin/marketplace.json`, `.cursor-plugin/marketplace.json` | The marketplace that lists the plugin, for Claude Code (also read by Copilot and VS Code) and for Cursor |
+| `gemini-extension.json` | The Gemini CLI extension: the MCP server, and the skill in `skills/` |
 | `skills/publish-fun/SKILL.md` | The same skill for other agents |
 | `clients/` | MCP setup for other clients (Claude Desktop, VS Code, Cursor, Cline, Codex) |
 | `submit/` | The GitHub Action (`publishfun/agent-kit/submit@v1`) |
@@ -71,4 +88,4 @@ Submitting accepts the [Terms](https://publish.fun/terms), [Privacy Notice](http
 | `examples/latex-to-markdown.md` | Converting a LaTeX paper for submission |
 | `mcp/server-card.json` | The MCP server card, as served by publish.fun |
 
-The skill and the server card are copied from publish.fun daily by [a workflow](.github/workflows/sync.yml); please don't edit them here. Problems with the API, the MCP server or this kit: open an issue.
+The skill and the server card are copied from publish.fun daily by [a workflow](.github/workflows/sync.yml), which publishes each change as a release (Gemini CLI installs from the latest release); please don't edit them here. Problems with the API, the MCP server or this kit: open an issue.
