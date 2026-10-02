@@ -3,9 +3,31 @@ on:
   push:
   pull_request:
 jobs:
-  test:
+  unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq pandoc
       - run: python3 -m unittest discover -s tests -v
+
+  action:
+    # Runs the composite action itself, end to end, against the mock API.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 tests/mock_api.py 8765 &
+          mkdir -p demo/paper
+          printf '\\documentclass{article}\\usepackage{graphicx}\\begin{document}Text $x^2$.\\begin{figure}\\includegraphics{fig.png}\\caption{Cap}\\end{figure}\\end{document}' > demo/paper/main.tex
+          printf '\x89PNG\r\n\x1a\n' > demo/paper/fig.png
+          printf '{"title":"CI paper","authors":[{"name":"A. Author"}],"abstract":"%s"}' "$(printf 'x%.0s' $(seq 60))" > demo/publishfun.json
+          sleep 1
+      - id: pf
+        uses: ./submit
+        with:
+          api-key: test-key
+          latex: demo/paper/main.tex
+          metadata: demo/publishfun.json
+          accept-terms: "true"
+          api-url: http://127.0.0.1:8765
+      - run: test "${{ steps.pf.outputs.paper-id }}" = "p_new" && test "${{ steps.pf.outputs.status }}" = "submitted"
