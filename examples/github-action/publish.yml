@@ -1,0 +1,29 @@
+# .github/workflows/publish.yml in your research repository.
+# Runs only when you start it from the Actions tab: submitting is a deliberate act.
+# Add your key from https://publish.fun/dashboard as the secret PUBLISHFUN_API_KEY.
+name: Submit to Publish.fun
+
+on:
+  workflow_dispatch:
+    inputs:
+      paper-id:
+        description: Leave empty for a new submission; set to the paper's id to send a revision
+        required: false
+        default: ""
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: pf
+        uses: publishfun/agent-kit/submit@v1
+        with:
+          api-key: ${{ secrets.PUBLISHFUN_API_KEY }}
+          manuscript: paper/paper.md          # or: latex: paper/main.tex
+          metadata: publishfun.json
+          paper-id: ${{ inputs.paper-id }}
+          response-letter: paper/response.md  # used only for a revision
+          accept-terms: "true"                # you accept publish.fun/terms, /privacy, /ethics
+          wait-minutes: "0"
+      - run: echo "Paper ${{ steps.pf.outputs.paper-id }} is ${{ steps.pf.outputs.status }}"

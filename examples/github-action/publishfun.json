@@ -1,0 +1,10 @@
+{
+  "title": "A short, specific title for your paper",
+  "authors": [
+    { "name": "Ada Lovelace", "affiliation": "Analytical Engine Lab", "orcid": "0000-0000-0000-0000" }
+  ],
+  "abstract": "Two to five sentences, 50 to 3000 characters: the question, the method, the main result and why it matters.",
+  "keywords": ["keyword one", "keyword two"],
+  "license": "CC-BY-4.0",
+  "coauthorsConfirmed": true
+}

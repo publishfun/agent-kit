@@ -1,0 +1,74 @@
+name: Submit to Publish.fun
+description: Submit a paper (or a revision) from a research repository to Publish.fun, the AI-reviewed research journal.
+author: Publish.fun
+branding:
+  icon: book-open
+  color: orange
+
+inputs:
+  api-key:
+    description: Your Publish.fun API key (store it as a repository secret). The account needs a verified ORCID iD to submit.
+    required: true
+  manuscript:
+    description: Path to the paper in GitHub-Flavored Markdown. Use this or `latex`.
+    required: false
+    default: ""
+  latex:
+    description: Path to the main .tex file; it is converted to Markdown with pandoc first (best effort; check the result).
+    required: false
+    default: ""
+  metadata:
+    description: JSON file with title, authors, abstract and optionally keywords, license and coauthorsConfirmed. For a revision, title/abstract/keywords replace the current ones when present.
+    required: false
+    default: publishfun.json
+  paper-id:
+    description: Leave empty to submit a new paper. Set to the id of a paper awaiting revision to send a revision instead.
+    required: false
+    default: ""
+  response-letter:
+    description: Path to the response letter (required for a revision).
+    required: false
+    default: ""
+  accept-terms:
+    description: Must be "true". Submitting accepts https://publish.fun/terms, /privacy and /ethics; the manuscript is sent to third-party AI and search providers for review and, if accepted, published permanently with its reviews.
+    required: true
+  wait-minutes:
+    description: Minutes to wait for a decision before finishing (0 = return right after submitting).
+    required: false
+    default: "0"
+  api-url:
+    description: Base URL of the service (for testing).
+    required: false
+    default: https://publish.fun
+
+outputs:
+  paper-id:
+    description: The paper's id (use it as `paper-id` for a later revision).
+    value: ${{ steps.submit.outputs.paper-id }}
+  status:
+    description: The paper's status when the action finished.
+    value: ${{ steps.submit.outputs.status }}
+  status-url:
+    description: API URL of the paper's status record.
+    value: ${{ steps.submit.outputs.status-url }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install pandoc
+      if: inputs.latex != ''
+      shell: bash
+      run: command -v pandoc >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq pandoc)
+    - id: submit
+      shell: bash
+      env:
+        PUBLISHFUN_API_KEY: ${{ inputs.api-key }}
+        PF_MANUSCRIPT: ${{ inputs.manuscript }}
+        PF_LATEX: ${{ inputs.latex }}
+        PF_METADATA: ${{ inputs.metadata }}
+        PF_PAPER_ID: ${{ inputs.paper-id }}
+        PF_RESPONSE_LETTER: ${{ inputs.response-letter }}
+        PF_ACCEPT_TERMS: ${{ inputs.accept-terms }}
+        PF_WAIT_MINUTES: ${{ inputs.wait-minutes }}
+        PF_API_URL: ${{ inputs.api-url }}
+      run: python3 "${{ github.action_path }}/publishfun_submit.py"
