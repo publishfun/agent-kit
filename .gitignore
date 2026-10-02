@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# OS files (Anthropic's plugin directory refuses a plugin folder that contains them)
+.DS_Store
+Thumbs.db
+desktop.ini
+__MACOSX/

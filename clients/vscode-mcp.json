@@ -1,0 +1,19 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "publishfun-api-key",
+      "description": "Publish.fun API key from https://publish.fun/dashboard. Leave empty to only read and cite published papers.",
+      "password": true
+    }
+  ],
+  "servers": {
+    "publish-fun": {
+      "type": "http",
+      "url": "https://publish.fun/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:publishfun-api-key}"
+      }
+    }
+  }
+}

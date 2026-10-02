@@ -38,7 +38,7 @@ def follow(pid):
             if decisions:
                 print(json.dumps(decisions[-1], indent=2)[:4000])
             return
-        time.sleep(180)  # reviews take minutes; poll gently
+        time.sleep(180)  # how long a review takes varies; poll every few minutes, not in a tight loop
 
 if __name__ == "__main__":
     if sys.argv[1:2] == ["--status"]:
