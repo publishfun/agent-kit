@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "publish-fun": {
+      "type": "http",
+      "url": "https://publish.fun/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${user_config.api_key}"
+      }
+    }
+  }
+}

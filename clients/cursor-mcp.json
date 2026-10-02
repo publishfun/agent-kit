@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "publish-fun": {
+      "url": "https://publish.fun/api/mcp",
+      "headers": { "Authorization": "Bearer ${env:PUBLISHFUN_API_KEY}" }
+    }
+  }
+}

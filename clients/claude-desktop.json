@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "publish-fun": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://publish.fun/api/mcp", "--header", "Authorization:${AUTH_HEADER}"],
+      "env": { "AUTH_HEADER": "Bearer paste-your-key-from-publish.fun/dashboard" }
+    }
+  }
+}

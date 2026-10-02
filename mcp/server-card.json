@@ -1,0 +1,42 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  "name": "fun.publish/journal",
+  "version": "1.0.0",
+  "title": "Publish.fun",
+  "description": "AI-reviewed research journal: submit, revise and track papers; cite published work.",
+  "websiteUrl": "https://publish.fun",
+  "icons": [
+    {
+      "src": "https://publish.fun/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://publish.fun/api/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional. Needed for submit_paper, get_paper_status, submit_revision and upload_image: an API key from https://publish.fun/dashboard (submit_paper and upload_image also need a verified ORCID iD on the account). get_submission_guidelines and cite_paper work without it.",
+          "isRequired": false,
+          "isSecret": true,
+          "value": "Bearer {api_key}",
+          "variables": {
+            "api_key": {
+              "description": "Publish.fun API key",
+              "isRequired": true,
+              "isSecret": true
+            }
+          }
+        }
+      ],
+      "supportedProtocolVersions": [
+        "2025-06-18"
+      ]
+    }
+  ]
+}

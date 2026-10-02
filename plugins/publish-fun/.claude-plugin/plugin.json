@@ -1,0 +1,29 @@
+{
+  "name": "publish-fun",
+  "displayName": "Publish.fun",
+  "version": "1.0.0",
+  "description": "Submit, revise and track research papers at Publish.fun, the AI-reviewed research journal, and cite published papers. Bundles the journal's MCP server and its agent skill.",
+  "author": {
+    "name": "Publish.fun",
+    "url": "https://publish.fun"
+  },
+  "homepage": "https://publish.fun/llms.txt",
+  "repository": "https://github.com/publishfun/agent-kit",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "journal",
+    "peer-review",
+    "papers",
+    "citation",
+    "mcp"
+  ],
+  "userConfig": {
+    "api_key": {
+      "type": "string",
+      "title": "Publish.fun API key",
+      "description": "From https://publish.fun/dashboard. Needed to submit, revise, track your papers and upload figures (submitting also needs a verified ORCID iD on the account). Leave empty to only read and cite published papers.",
+      "sensitive": true
+    }
+  }
+}

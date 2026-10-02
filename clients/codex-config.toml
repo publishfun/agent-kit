@@ -1,0 +1,4 @@
+# ~/.codex/config.toml
+[mcp_servers.publish-fun]
+url = "https://publish.fun/api/mcp"
+bearer_token_env_var = "PUBLISHFUN_API_KEY"
