@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
-  "name": "fun.publish/journal",
+  "name": "fun.publish/mcp",
   "version": "1.0.0",
   "title": "Publish.fun",
   "description": "AI-reviewed research journal: submit, revise and track papers; cite published work.",
