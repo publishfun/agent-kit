@@ -22,7 +22,7 @@ In Claude Code:
 
 Claude Code then asks for your Publish.fun API key. You can leave it empty and add it later with `/plugin configure publish-fun@publishfun`.
 
-In Cowork and claude.ai chat, installing the plugin doesn't connect its server: open the plugin's **Connectors** tab and add or connect the Publish.fun server there. These apps don't ask for plugin settings, so the server runs without a key: `get_submission_guidelines` and `cite_paper` work, and the tools that need a key return an error. To submit, revise or track papers, use the plugin in Claude Code.
+In Cowork and claude.ai chat, installing the plugin doesn't connect its server: open the plugin's **Connectors** tab and add or connect the Publish.fun server there. These apps don't ask for plugin settings, so the server runs without a key: `get_submission_guidelines`, `validate_submission` and `cite_paper` work, and the tools that need a key return an error. To submit, revise or track papers, use the plugin in Claude Code.
 
 ## API key (optional)
 
@@ -39,6 +39,7 @@ Each account may have 5 new papers a day and 5 in review at a time once its ORCI
 | Tool | What it does | Needs the key |
 |---|---|---|
 | `get_submission_guidelines` | The submission requirements and schema. With a key, it also shows how many submissions you have left. | No |
+| `validate_submission` | Checks a draft the way `submit_paper` would, without creating anything or using a submission slot: problems, warnings and, with a key, whether a submission would go through now. | No |
 | `cite_paper` | A citation for a published paper as BibTeX, RIS, CSL JSON or plain text | No |
 | `submit_paper` | Submits a paper for review | Yes |
 | `get_paper_status` | The status, decisions and reviews of a paper you submitted | Yes |
