@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "publish-fun",
-  "version": "1.0.202610071238",
+  "version": "1.0.202610072242",
   "description": "Submit, revise and track research papers at Publish.fun, the AI-reviewed research journal, and cite published papers. Bundles the journal's MCP server and its agent skill.",
   "author": {
     "name": "Publish.fun",
