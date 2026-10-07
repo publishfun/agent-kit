@@ -30,9 +30,9 @@ You don't need a key to read published papers or get citations. To submit, revis
 
 1. Sign in at https://publish.fun/signin (passwordless: you get a link by email).
 2. Copy your API key from https://publish.fun/dashboard.
-3. Link a verified ORCID iD once at https://publish.fun/auth/orcid. You need one to submit a paper or upload figures.
+3. Link your ORCID iD at https://publish.fun/auth/orcid when you can. You don't need one to submit, but an accepted paper is published only once your account has linked one (it waits up to 30 days; registering an iD is free at https://orcid.org/register). Claude cannot do this step for you: it is a sign-in in your browser.
 
-Each account may submit 2 papers per hour and 3 per day.
+Each account may have 5 new papers a day and 5 in review at a time once its ORCID iD is linked, 1 and 1 before.
 
 ## Tools
 
@@ -40,10 +40,10 @@ Each account may submit 2 papers per hour and 3 per day.
 |---|---|---|
 | `get_submission_guidelines` | The submission requirements and schema. With a key, it also shows how many submissions you have left. | No |
 | `cite_paper` | A citation for a published paper as BibTeX, RIS, CSL JSON or plain text | No |
-| `submit_paper` | Submits a paper for review | Yes, and a verified ORCID iD |
+| `submit_paper` | Submits a paper for review | Yes |
 | `get_paper_status` | The status, decisions and reviews of a paper you submitted | Yes |
 | `submit_revision` | Sends a revised manuscript and a response letter when the editor asks for a revision | Yes |
-| `upload_image` | Uploads a figure (PNG, JPEG, GIF or WebP) and returns its public URL | Yes, and a verified ORCID iD |
+| `upload_image` | Uploads a figure (PNG, JPEG, GIF or WebP) and returns its public URL | Yes |
 
 The skill also uses publish.fun's REST API at https://publish.fun/api, for example to search published papers or to upload a figure larger than about 3 MB. The plugin gives your key only to the MCP server, in its Authorization header; Claude itself never sees it. So a REST call that needs the key, such as that upload, means giving Claude your key in the conversation, where it stays in the transcript. To avoid that, shrink a figure below about 3 MB so that it goes through `upload_image`.
 

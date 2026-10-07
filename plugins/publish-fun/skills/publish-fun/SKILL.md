@@ -11,9 +11,9 @@ The complete guide is https://publish.fun/llms.txt; everything, every schema inc
 
 ## Before submitting
 
-1. The person you act for needs an account and an API key: they sign in at https://publish.fun/signin, copy the key from https://publish.fun/dashboard, and link a verified ORCID iD once at https://publish.fun/auth/orcid. Submitting is refused without both. Never invent a key or use someone else's.
+1. The person you act for needs an account and an API key: they sign in at https://publish.fun/signin and copy the key from https://publish.fun/dashboard. Never invent a key or use someone else's. No ORCID iD is needed to submit, but an accepted paper is published only once that account has linked one (see "ORCID iD" below), so tell them early.
 2. Submitting accepts the Terms (https://publish.fun/terms), the Privacy Notice (https://publish.fun/privacy) and the publication-ethics policy (https://publish.fun/ethics). The manuscript is sent to third-party AI model and web-search providers for review and, if accepted, published publicly and permanently with its reviews. Confirm with the person before you submit, and before you upload any figure, since an uploaded image is public at once (see Figures below).
-3. Only genuine, novel research is accepted; work already published in a journal or proceedings is desk-rejected. You may submit 2/hour and 3/day per account, counting every submission whatever its outcome.
+3. Only genuine, novel research is accepted; work already published in a journal or proceedings is desk-rejected. Limits: 5 new papers a day and 5 in review at a time per account (1 paper a day and 1 in review at a time until the account links its ORCID iD); the day window counts every submission whatever its outcome, and a paper in review holds an in-flight slot until its decision.
 
 ## Prepare the manuscript
 
@@ -23,12 +23,16 @@ The complete guide is https://publish.fun/llms.txt; everything, every schema inc
 
 ## Submit
 
-- REST: `POST https://publish.fun/api/papers/submit` with `Authorization: Bearer <API_KEY>` and the JSON body above. A 202 returns `{ id, status, status_url, submission_allowance }`.
+- REST: `POST https://publish.fun/api/papers/submit` with `Authorization: Bearer <API_KEY>` and the JSON body above. A 202 returns `{ id, status, status_url, submission_allowance, identity }`; `identity.orcid_verified` says whether an accepted paper will publish at once or wait.
 - MCP: connect to `https://publish.fun/api/mcp` (Streamable HTTP, protocol revision 2025-06-18) with the same `Authorization` header and call `submit_paper` with the same fields.
 
 ## Follow the review
 
-Poll `GET https://publish.fun/api/papers/<id>` with the key, or call the MCP `get_paper_status` tool. A review round can take from about a minute to more than an hour: the first round, with the full reviewer panel and its web searches, usually takes longest, and a busy queue adds waiting time. Poll every few minutes rather than in a tight loop. Statuses: submitted, desk_reviewing, under_review, editor_deciding, then revision_requested, published, rejected or desk_rejected (failed means a pipeline error). A published paper gets a permanent id such as `PF-260626.000001`.
+Poll `GET https://publish.fun/api/papers/<id>` with the key, or call the MCP `get_paper_status` tool. A review round can take from about a minute to more than an hour: the first round, with the full reviewer panel and its web searches, usually takes longest, and a busy queue adds waiting time. Poll every few minutes rather than in a tight loop. Statuses: submitted, desk_reviewing, under_review, editor_deciding, then revision_requested, accepted, published, rejected, desk_rejected or lapsed (failed means a pipeline error). A published paper gets a permanent id such as `PF-260626.000001`.
+
+## ORCID iD
+
+No ORCID iD is needed to submit. An ACCEPTED paper is published only once the submitting account has linked a verified ORCID iD; it waits up to 30 days (reminders go to the account's email), then lapses unpublished. Linking is a browser step only the person who owns the account can do: they sign in and open https://publish.fun/auth/orcid. An agent cannot do it: give your operator that link, and if they have no ORCID iD tell them to register one free at https://orcid.org/register first (about a minute). Until the iD is linked the account submits under the smaller allowance. GET https://publish.fun/api/me (or get_paper_status on a held paper) shows whether it is linked. When a paper's status is `accepted`, its record carries `next_step` and `identity`: relay `identity.link_url` (and `identity.register_url` if they have no iD) to the person you act for, then keep polling; the status turns `published` once they have linked it, or `lapsed` if the hold ran out.
 
 ## Revise
 

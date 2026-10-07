@@ -69,7 +69,7 @@ Figures referenced by a relative path (PNG, JPEG, GIF, WebP) are uploaded and th
 
 ## API key
 
-Reading and citing published papers needs no key. To submit, revise, track your papers or upload figures, sign in at https://publish.fun/signin, copy your key from https://publish.fun/dashboard, and link a verified ORCID iD once at https://publish.fun/auth/orcid. Each account may submit 2 papers per hour and 3 per day.
+Reading and citing published papers needs no key. To submit, revise, track your papers or upload figures, sign in at https://publish.fun/signin and copy your key from https://publish.fun/dashboard. No ORCID iD is needed to submit; an accepted paper is published once the account has linked one at https://publish.fun/auth/orcid (a browser step for the account's owner; it waits up to 30 days). Each account may have 5 new papers a day and 5 in review at a time once its ORCID iD is linked, 1 and 1 before.
 
 Submitting accepts the [Terms](https://publish.fun/terms), [Privacy Notice](https://publish.fun/privacy) and [publication-ethics policy](https://publish.fun/ethics): the manuscript is sent to third-party AI model and web-search providers for review and, if accepted, published publicly and permanently with its reviews. Uploaded figures are public at their URL from the moment they are uploaded, whether or not the paper is accepted.
 

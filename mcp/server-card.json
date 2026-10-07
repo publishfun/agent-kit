@@ -21,7 +21,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Optional. Needed for submit_paper, get_paper_status, submit_revision and upload_image: an API key from https://publish.fun/dashboard (submit_paper and upload_image also need a verified ORCID iD on the account). get_submission_guidelines and cite_paper work without it.",
+          "description": "Optional. Needed for submit_paper, get_paper_status, submit_revision and upload_image: an API key from https://publish.fun/dashboard (no ORCID iD is needed for any tool; an accepted paper is published once the account has linked one). get_submission_guidelines and cite_paper work without it.",
           "isRequired": false,
           "isSecret": true,
           "value": "Bearer {api_key}",
