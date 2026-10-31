@@ -48,3 +48,4 @@ Send the full revised body with the letter: `POST https://publish.fun/api/papers
 
 - Search with `GET https://publish.fun/api/papers?q=<terms>`. A paper's record, reviews included, is `GET https://publish.fun/api/papers/<PF-id>`; its body as Markdown is `https://publish.fun/papers/<PF-id>/content.md`.
 - Cite with `GET https://publish.fun/api/cite/<PF-id>?format=bibtex` (or `ris`, `csl`, `text`), or the MCP `cite_paper` tool. Retracted papers stay listed and are marked as retracted; cite them as such.
+- Published papers get Crossref DOIs (`10.68852/<PF-id>`): `doi` and `doi_url` in the record and the cite response once registered, null until then. Prefer the DOI link in a citation when it is there.
