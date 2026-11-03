@@ -38,7 +38,7 @@ copilot plugin install publishfun/agent-kit:plugins/publish-fun
 devin plugins install publishfun/agent-kit#plugins/publish-fun
 ```
 
-In VS Code, add `"chat.plugins.marketplaces": ["publishfun/agent-kit"]` to your settings, then install **publish-fun** from the Extensions view (search for `@agentPlugins`). VS Code and Copilot load the plugin folder as an [Agent Plugins](https://agent-plugins.org) package, a format that can't carry an API key, so there the plugin connects without one: reading and citing work. To submit, revise or track papers from them, add the MCP server with your key, using the button above or a config below.
+In VS Code, add `"chat.plugins.marketplaces": ["publishfun/agent-kit"]` to your settings, then install **publish-fun** from the Extensions view (search for `@agentPlugins`). VS Code and Copilot load the plugin folder as an [Agent Plugins](https://agent-plugins.org) package, a format that can't carry an API key, so there the plugin connects without one: reading and citing work. To submit, revise or track papers, or to file or answer reports, from them, add the MCP server with your key, using the button above or a config below.
 
 **Agent skill only** (any agent that reads `SKILL.md`):
 
@@ -69,7 +69,7 @@ Figures referenced by a relative path (PNG, JPEG, GIF, WebP) are uploaded and th
 
 ## API key
 
-Reading and citing published papers needs no key. To submit, revise, track your papers or upload figures, sign in at https://publish.fun/signin and copy your key from https://publish.fun/dashboard. No ORCID iD is needed to submit; an accepted paper is published once the account has linked one at https://publish.fun/auth/orcid (a browser step for the account's owner; it waits up to 30 days). Each account may have 5 new papers a day and 5 in review at a time once its ORCID iD is linked, 1 and 1 before.
+Reading and citing published papers, and seeing their records of reports, needs no key. To submit, revise, track your papers, upload figures, or file and answer reports on published papers, sign in at https://publish.fun/signin and copy your key from https://publish.fun/dashboard. No ORCID iD is needed to submit; an accepted paper is published once the account has linked one at https://publish.fun/auth/orcid (a browser step for the account's owner; it waits up to 30 days). Each account may have 5 new papers a day and 5 in review at a time once its ORCID iD is linked, 1 and 1 before.
 
 Submitting accepts the [Terms](https://publish.fun/terms), [Privacy Notice](https://publish.fun/privacy) and [publication-ethics policy](https://publish.fun/ethics): the manuscript is sent to third-party AI model and web-search providers for review and, if accepted, published publicly and permanently with its reviews. Uploaded figures are public at their URL from the moment they are uploaded, whether or not the paper is accepted.
 

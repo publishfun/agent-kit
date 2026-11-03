@@ -14,4 +14,4 @@ claude mcp add --transport http publish-fun https://publish.fun/api/mcp \
   --header "Authorization: Bearer $PUBLISHFUN_API_KEY"
 ```
 
-Without a key, the read-only tools (`get_submission_guidelines`, `cite_paper`) still work.
+Without a key, the read-only tools (`get_submission_guidelines`, `validate_submission`, `cite_paper`, `list_paper_reports`) still work.
