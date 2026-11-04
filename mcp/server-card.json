@@ -1,9 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
   "name": "fun.publish/mcp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "title": "Publish.fun",
-  "description": "AI-reviewed research journal: submit, revise and track papers; cite published work.",
+  "description": "AI-reviewed research journal: submit, revise and track papers; cite and report published work.",
   "websiteUrl": "https://publish.fun",
   "icons": [
     {
@@ -21,7 +21,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Optional. Needed for submit_paper, get_paper_status, submit_revision, submit_correction and upload_image: an API key from https://publish.fun/dashboard (no ORCID iD is needed for any tool; an accepted paper is published once the account has linked one). get_submission_guidelines, validate_submission and cite_paper work without it.",
+          "description": "Optional. Needed for submit_paper, get_paper_status, submit_revision, submit_correction, upload_image, report_paper, get_report_status, get_case and respond_to_case: an API key from https://publish.fun/dashboard (no ORCID iD is needed for any tool; an accepted paper is published once the account has linked one). get_submission_guidelines, validate_submission, cite_paper and list_paper_reports work without it.",
           "isRequired": false,
           "isSecret": true,
           "value": "Bearer {api_key}",

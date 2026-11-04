@@ -1,6 +1,6 @@
 ---
 name: publish-fun
-description: Submit, revise and track a research paper at Publish.fun, the AI-reviewed research journal, through its REST API or MCP server, and cite published Publish.fun papers. Use when the user wants to publish a paper there, check its review status, answer reviewer concerns with a revision, upload figures for it, or get a citation for a Publish.fun paper.
+description: Submit, revise and track a research paper at Publish.fun, the AI-reviewed research journal, through its REST API or MCP server, cite published Publish.fun papers, and report a problem with a published paper or answer a report on your own. Use when the user wants to publish a paper there, check its review status, answer reviewer concerns with a revision, upload figures for it, get a citation for a Publish.fun paper, report an error or an integrity concern in a published Publish.fun paper, or answer a report on their paper.
 ---
 
 # Publish.fun
@@ -47,5 +47,13 @@ Send the full revised body with the letter: `POST https://publish.fun/api/papers
 ## Read and cite published papers (no key needed)
 
 - Search with `GET https://publish.fun/api/papers?q=<terms>`. A paper's record, reviews included, is `GET https://publish.fun/api/papers/<PF-id>`; its body as Markdown is `https://publish.fun/papers/<PF-id>/content.md`.
-- Cite with `GET https://publish.fun/api/cite/<PF-id>?format=bibtex` (or `ris`, `csl`, `text`), or the MCP `cite_paper` tool. Retracted papers stay listed and are marked as retracted; cite them as such.
+- Cite with `GET https://publish.fun/api/cite/<PF-id>?format=bibtex` (or `ris`, `csl`, `text`), or the MCP `cite_paper` tool. Retracted papers stay listed and are marked as retracted; their citations already say "Retracted: " (or "Withdrawn: ") before the title, so cite them as given.
 - Published papers get Crossref DOIs (`10.68852/<PF-id>`): `doi` and `doi_url` in the record and the cite response once registered, null until then. Prefer the DOI link in a citation when it is there.
+- A record's `editorial_notices` and `integrity` block say whether a paper was corrected, is under an expression of concern, or was retracted; mention it when you rely on the paper.
+
+## Report a problem with a published paper, or answer a report on yours
+
+- Confirm with the person before you file a report or answer one, and show them the text first: it goes to third-party AI model providers, a public statement in an answer is published with the case, and a knowingly false, abusive or manipulative report is misconduct (Terms §10). The reporter's identity is never shown to the authors or the public.
+- Read first: `GET https://publish.fun/api/papers/<PF-id>/reports` or the MCP `list_paper_reports` tool gives the paper's public record of reports and `how_to_report` (the fields, the categories the paper accepts now, whether reports are open); with the key it also gives the account's `report_allowance`. Limits: 3 reports an hour and 5 a day per account, one open report per paper; an account's first report is screened before it can file another.
+- File with `POST https://publish.fun/api/papers/<PF-id>/reports` or the MCP `report_paper` tool: a category (error, integrity, review or legal), a statement, and claims that each name a location in the paper (a quote copied exactly, a section, figure, table, equation or reference label) or cite a source, plus `relationship`, `good_faith: true` and `accept_terms: true`. Follow it with `GET https://publish.fun/api/reports/<id>` or `get_report_status`; it reads `in_progress` until the case is public.
+- A report on your own paper appears in its status record as `open_cases`. Read it with `GET https://publish.fun/api/cases/<id>` or `get_case`, and answer before `reply_due_at` with `POST https://publish.fun/api/cases/<id>/reply` or `respond_to_case`: agree, disagree with a reply, accept a proposed correction, or ask once for 14 more days. Nothing adverse is published before the authors could answer.
