@@ -7,7 +7,7 @@ branding:
 
 inputs:
   api-key:
-    description: Your Publish.fun API key (store it as a repository secret). The account needs a verified ORCID iD to submit.
+    description: Your Publish.fun API key (store it as a repository secret). No ORCID iD is needed to submit; an accepted paper is published once the account has linked one (it waits up to 30 days).
     required: true
   manuscript:
     description: Path to the paper in GitHub-Flavored Markdown. Use this or `latex`.

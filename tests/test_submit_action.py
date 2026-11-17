@@ -81,11 +81,13 @@ class SubmitActionTest(unittest.TestCase):
         self.assertEqual(Api.calls, [])
 
     def test_rate_limit_is_explained(self):
+        """In the API's own words: its 429 names the limit that was reached, and a sentence added here went stale (it gave the limits of before 2026-10-07)."""
         Api.mode["ratelimit"] = True
         (self.dir / "paper" / "paper.md").write_text("# No figures\n")
         r = self.run_action()
         self.assertNotEqual(r.returncode, 0)
-        self.assertIn("2 papers per hour and 3 per day", r.stdout)
+        self.assertIn("Rate limited: Submission limit reached", r.stdout)
+        self.assertNotIn("per hour", r.stdout)
 
     def test_waits_for_a_decision_when_asked(self):
         (self.dir / "paper" / "paper.md").write_text("# No figures\n")

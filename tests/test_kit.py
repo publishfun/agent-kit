@@ -149,6 +149,17 @@ class OtherAgentsTest(unittest.TestCase):
             self.assertFalse((ROOT / p).exists(), p)
 
 
+class ActionTest(unittest.TestCase):
+    """The submit action's own words about the account (submit/action.yml)."""
+
+    def test_api_key_description_says_what_the_orcid_id_gates(self):
+        text = (ROOT / "submit" / "action.yml").read_text(encoding="utf-8")
+        description = re.search(r"(?m)^  api-key:\n    description: (.+)$", text).group(1)
+        self.assertIn("No ORCID iD is needed to submit", description)  # none since 2026-10-07
+        self.assertIn("an accepted paper is published once the account has linked one", description)
+        self.assertNotRegex(description, r"needs a verified ORCID iD")
+
+
 class SkillTest(unittest.TestCase):
     """The skill as mirrored from publish.fun."""
 

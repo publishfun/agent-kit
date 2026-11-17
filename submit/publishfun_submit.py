@@ -175,7 +175,7 @@ def main():
             kind = "new paper"
     except ApiError as e:
         if e.status == 429:
-            fail(f"Rate limited: {e.body} (each account may submit 2 papers per hour and 3 per day).")
+            fail(f"Rate limited: {e.body}")
         fail(f"Publish.fun refused the {'revision' if paper_id else 'submission'}: {e}")
 
     pid, status_url = res["id"], res.get("status_url", "")
